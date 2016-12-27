@@ -1,0 +1,26 @@
+{
+  "name": "7daystociv-channel",
+  "version": "1.0.0",
+  "description": "7 Days to Civ Channel Client",
+  "main": "app.js",
+  "dependencies": {
+    "discord.js": "^10.0.1",
+    "lodash": "^4.17.3",
+    "node-opus": "^0.2.4",
+    "telnet-client": "^0.12.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianhawes/7daystociv-channel.git"
+  },
+  "author": "Ian Hawes",
+  "license": "SEE LICENSE IN LICENSE.MD",
+  "bugs": {
+    "url": "https://github.com/ianhawes/7daystociv-channel/issues"
+  },
+  "homepage": "https://github.com/ianhawes/7daystociv-channel#readme"
+}
