@@ -68,19 +68,11 @@ discord_client.on('error', () => {
 });
 
 discord_client.on('message', message => {
-    if (message.content === '!ping') {
+    if (message.content.startsWith('!ping')) {
         message.reply('pong');
     }
 
-    if (message.content === '!help') {
-        let helpBanner = [];
-        helpBanner.push(`Available Commands: `);
-        helpBanner.push(`   !whoson`);
-        helpBanner.push(`       Displays who is online on the game server`);
-        message.channel.sendMessage(helpBanner.join("\n"));
-    }
-
-    if (message.content === '!whoson') {
+    if (message.content.startsWith('!whoson')) {
         Server.refreshPlayers().then((players) => {
             if (players.length == 0) {
                 message.reply(`There are no players currently online.`);
@@ -96,6 +88,37 @@ discord_client.on('message', message => {
             }
         });
     }
+
+    if (message.channel.name == 'dev') {
+        // Only dev commands are allowed here
+        if (message.content.startsWith('!announce')) {
+            let announcementMessage = message.content.substr('!announce'.length+1);
+            Server.say(announcementMessage);
+            message.reply(`that announcement was displayed to the server.`);
+        }
+
+        if (message.content.startsWith('!help')) {
+            let helpBanner = [];
+            helpBanner.push(`Available Commands: `);
+            helpBanner.push(`   !whoson`);
+            helpBanner.push(`       Displays who is online on the game server`);
+            helpBanner.push(`   !announce`);
+            helpBanner.push(`       Displays a global message to the server (only available to users in #dev)`);
+            message.channel.sendMessage(helpBanner.join("\n"));
+        }
+    } else {
+        if (message.content.startsWith('!help')) {
+            let helpBanner = [];
+            helpBanner.push(`Available Commands: `);
+            helpBanner.push(`   !whoson`);
+            helpBanner.push(`       Displays who is online on the game server`);
+            message.channel.sendMessage(helpBanner.join("\n"));
+        }
+
+
+    }
+
+
 });
 
 // Server Tasks
@@ -124,6 +147,10 @@ let Server = {
         });
     },
 
+    say: (message) => {
+        telnet_client.send(`say ${message}`);
+    },
+
     parseIncoming: (line, trigger) => {
         switch (trigger) {
             case 'player_connected':
@@ -137,7 +164,7 @@ let Server = {
             case 'player_disconnected':
                 var name_pattern = new RegExp("PlayerName=\\'(\\S+)\\'");
                 var name = name_pattern.exec(line)[1];
-                discord_client.channels.find("name",discord_channel).sendMessage(`${name} disconnected to the server.`);
+                discord_client.channels.find("name",discord_channel).sendMessage(`${name} disconnected from the server.`);
                 console.log(`${name} disconnected from the server.`);
             break;
 
