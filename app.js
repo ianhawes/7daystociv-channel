@@ -34,12 +34,8 @@ telnet_client.on('timeout', function() {
 });
 
 telnet_client.on('close', function() {
-    console.log('[Connection Closed]');
-    process.exit();
-});
-
-telnet_client.on('failedlogin', function() {
-    console.log('[Error] Failed login');
+    console.log('[Telnet Connection Closed]');
+    process.exit(1);
 });
 
 telnet_client.on('data', function(buffer) {
@@ -61,9 +57,27 @@ discord_client.login(discord_token);
 discord_client.on('ready', () => {
 });
 
+discord_client.on('disconnect', () => {
+    console.log('[Discord Connection Closed]');
+    process.exit(1);
+});
+
+discord_client.on('error', () => {
+    console.log('[Discord Error - Connection Closed]');
+    process.exit(1);
+});
+
 discord_client.on('message', message => {
     if (message.content === '!ping') {
         message.reply('pong');
+    }
+
+    if (message.content === '!help') {
+        let helpBanner = [];
+        helpBanner.push(`Available Commands: `);
+        helpBanner.push(`   !whoson`);
+        helpBanner.push(`       Displays who is online on the game server`);
+        message.channel.sendMessage(helpBanner.join("\n"));
     }
 
     if (message.content === '!whoson') {
@@ -162,5 +176,3 @@ let Server = {
         }
     }
 };
-
-setTimeout(() => Server.refreshPlayers(), 2000);
