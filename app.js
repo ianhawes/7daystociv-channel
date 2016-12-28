@@ -148,7 +148,9 @@ let Server = {
     },
 
     say: (message) => {
-        telnet_client.send(`say ${message}`);
+        telnet_client.send(`say "${message}"`,telnet_params,(err, response) => {
+            console.log(`[Announcement] ${message}`);
+        });
     },
 
     parseIncoming: (line, trigger) => {
