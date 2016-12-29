@@ -11,7 +11,7 @@ let Players = new Array();
 let Discord = require('discord.js');
 let discord_client = new Discord.Client();
 let discord_token = 'MjYzMzMxNDQ0ODU0NjIwMTgw.C0QeSg.SJbTc5eA-0EzXRnRhAnS5MbFGo4';
-let discord_channel = 'general';
+let discord_channel = 'bot';
 let telnet_params = {
     host: 'play.7daystociv.com',
     port: 8081,
@@ -70,6 +70,11 @@ discord_client.on('error', () => {
 discord_client.on('message', message => {
     if (message.content.startsWith('!ping')) {
         message.reply('pong');
+    }
+
+    if (message.content.startsWith('!passthrough')) {
+        let passThruCommand = message.content.substr('!passthrough'.length+1);
+        Server.command(passThruCommand);
     }
 
     if (message.content.startsWith('!whoson')) {
@@ -156,6 +161,12 @@ let Server = {
     say: (message) => {
         telnet_client.send(`say "${message}"`,telnet_params,(err, response) => {
             console.log(`[Announcement] ${message}`);
+        });
+    },
+
+    command: (cmd) => {
+        telnet_client.send(`${cmd}`,telnet_params,(err, response) => {
+            console.log(`[Pass Through] ${cmd}`);
         });
     },
 
