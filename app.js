@@ -97,6 +97,10 @@ discord_client.on('message', message => {
             message.reply(`that announcement was displayed to the server.`);
         }
 
+        if (message.content.startsWith('!restartbot')) {
+            process.exit(1);
+        }
+
         if (message.content.startsWith('!help')) {
             let helpBanner = [];
             helpBanner.push(`Available Commands: `);
@@ -104,6 +108,8 @@ discord_client.on('message', message => {
             helpBanner.push(`       Displays who is online on the game server`);
             helpBanner.push(`   !announce`);
             helpBanner.push(`       Displays a global message to the server (only available to users in #dev)`);
+            helpBanner.push(`   !restartbot`);
+            helpBanner.push(`       Restarts the Discord bot (does not restart server)`);
             message.channel.sendMessage(helpBanner.join("\n"));
         }
     } else {
